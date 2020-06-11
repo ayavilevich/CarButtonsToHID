@@ -82,6 +82,8 @@ void buttonUpCallback(const uint8 button, uint32 duration) {
 	digitalWrite(LED_BUILTIN, HIGH);
 	if (duration < LONG_PRESS_DURATION) { // if short press
 #ifdef USE_BUZZER
+		DebugSerial.print(" Starting tone: ");
+		DebugSerial.print(millis());
 		tone(BUZZER_PIN, 2000, 100);
 #endif
 #ifdef PERFORM_HID_ACTIONS
@@ -123,6 +125,8 @@ void buttonUpCallback(const uint8 button, uint32 duration) {
 void buttonHeldCallback(const uint8 button, uint32 duration) {
 	if (duration == LONG_PRESS_DURATION) { // if long hold
 #ifdef USE_BUZZER
+		DebugSerial.print("Starting long tone: ");
+		DebugSerial.println(millis());
 		tone(BUZZER_PIN, 4000, 200);
 #endif
 #ifdef PERFORM_HID_ACTIONS
