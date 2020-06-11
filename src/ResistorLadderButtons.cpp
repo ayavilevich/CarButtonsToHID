@@ -7,11 +7,13 @@
 
 const uint16 SAMPLE_ACQUISITION = 10; // us, property of uC
 const uint16 SAMPLE_DELAY = 100; // us, a delay we can add to make it all less stressful and more stable
+const uint16 SAMPLE_DURATION = SAMPLE_ACQUISITION + SAMPLE_DELAY;
 const uint8 BIN_MARGIN_PERCENT = 20; // % of bin ohm value
 const uint8 BIN_MARGIN_MIN = 50; // in ohms
-const uint16 BIN_DEBOUNCE_SAMPLES = 30000 / (SAMPLE_ACQUISITION + SAMPLE_DELAY); // number of samples in about 30ms
+const uint16 BIN_DEBOUNCE_SAMPLES = 30000 / SAMPLE_DURATION; // number of samples in about 30ms
 const uint16 HELD_CALLBACK_INTERVAL = 100; // ms
 const uint16 ADC_AVERAGING_ALPHA_PERCENT = 10; // parameter of an averaging filter. new value is 10% of previous filtered value
+const uint32 PERIODICAL_LOG_INTERVAL = 1000 * 1000; // us
 
 ResistorLadderButtons::ResistorLadderButtons(const uint16 adcMax, const uint16 rBase, const uint8 pin, const uint32* bins, const uint8 binCount)
 	: adcMax(adcMax), rBase(rBase), pin(pin), bins(bins), binCount(binCount) {
@@ -35,9 +37,11 @@ void ResistorLadderButtons::loop() {
 	// Bench result: 947ms for 100K iterations => 100 iterations per 1ms => 1 iteration is 10us (without delay)
 	int static counter = 0;
 	counter++;
+	/*
 	if (counter % 100000 == 0) {
 		StreamPrintf(debugStream, "Time of 100000 samples: %d\r\n", millis());
 	}
+	*/
 
 	if (bin != lastBin) {
 		StreamPrintf(debugStream, "%d - %d - %d - %d - %d - %d - ", millis(), v, filteredValue, r, lastBin, bin);
@@ -77,7 +81,7 @@ void ResistorLadderButtons::loop() {
 		lastBin = bin;
 		samplesInLastBin = 0;
 	} else { // same bin
-		if (counter % (1000000 / SAMPLE_DELAY) == 0) { // do periodical print of values even if there is no change
+		if (counter % (PERIODICAL_LOG_INTERVAL / SAMPLE_DURATION) == 0) { // do periodical print of values even if there is no change
 			StreamPrintf(debugStream, "%d - %d - %d - %d - %d - Periodic\r\n", millis(), v, filteredValue, r, bin);
 		}
 		if (samplesInLastBin == BIN_DEBOUNCE_SAMPLES && bin > 0) { // if we are exactly BIN_DEBOUNCE_SAMPLES there
