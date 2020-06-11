@@ -1,6 +1,6 @@
-#include <Arduino.h>
-
 #include "ResistorLadderButtons.hpp"
+
+#include <Arduino.h>
 
 // #define ADC_TEST
 
@@ -13,7 +13,8 @@ const uint16 HELD_CALLBACK_INTERVAL = 100; // ms
 const uint16 ADC_AVERAGING_ALPHA_PERCENT = 10; // parameter of an averaging filter. new value is 10% of previous filtered value
 
 ResistorLadderButtons::ResistorLadderButtons(const uint16 adcMax, const uint16 rBase, const uint8 pin, const uint32* bins, const uint8 binCount)
-	: adcMax(adcMax), rBase(rBase), pin(pin), bins(bins), binCount(binCount) {}
+	: adcMax(adcMax), rBase(rBase), pin(pin), bins(bins), binCount(binCount) {
+}
 
 void ResistorLadderButtons::setup() {
 	pinMode(pin, INPUT); // assume external pullup is used
@@ -56,7 +57,7 @@ void ResistorLadderButtons::loop() {
 			debugStream->print(" - ");
 		}
 
-		if (lastBin > 0) {								   // if we are leaving a bin that is a button
+		if (lastBin > 0) { // if we are leaving a bin that is a button
 			if (samplesInLastBin > BIN_DEBOUNCE_SAMPLES) { // if we are leaving it and we were stable in it
 				if (debugStream != NULL) {
 					debugStream->print("Stable release: ");
@@ -81,8 +82,8 @@ void ResistorLadderButtons::loop() {
 			// debugStream->print(lastBin);
 		}
 		if (bin > 0) { // if we are entering a new bin that is a button
-					   // debugStream->print("Pressing: ");
-					   // debugStream->print(bin);
+			// debugStream->print("Pressing: ");
+			// debugStream->print(bin);
 		}
 		if (debugStream != NULL) {
 			debugStream->println();
@@ -161,7 +162,9 @@ int8 ResistorLadderButtons::rToBin(uint32 r) {
 	return -1;
 }
 
-uint32 ResistorLadderButtons::adcToResistance(uint16 rBase, uint16 adc) { return (uint32)adc * rBase / (adcMax - adc); }
+uint32 ResistorLadderButtons::adcToResistance(uint16 rBase, uint16 adc) {
+	return (uint32)adc * rBase / (adcMax - adc);
+}
 
 void ResistorLadderButtons::doAdcTest() {
 	const int N = 1000;

@@ -74,9 +74,13 @@ void setup() {
 	buttons.setButtonHeldCallback(buttonHeldCallback);
 }
 
-void loop() { buttons.loop(); }
+void loop() {
+	buttons.loop();
+}
 
-void buttonDownCallback(const uint8 button) { digitalWrite(LED_BUILTIN, LOW); }
+void buttonDownCallback(const uint8 button) {
+	digitalWrite(LED_BUILTIN, LOW);
+}
 
 void buttonUpCallback(const uint8 button, uint32 duration) {
 	digitalWrite(LED_BUILTIN, HIGH);

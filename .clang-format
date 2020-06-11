@@ -1,12 +1,14 @@
 # http://clang.llvm.org/docs/ClangFormatStyleOptions.html
 ---
 # We'll use defaults from the LLVM style, but with 4 columns indentation.
-BasedOnStyle: LLVM
+#BasedOnStyle: LLVM
+BasedOnStyle: Microsoft
 IndentWidth: 4
 TabWidth: 4
 UseTab: Always
 BreakBeforeBraces: Attach
 ColumnLimit: 200
+AlignTrailingComments: false
 ---
 Language: Cpp
 # Force pointers to the type for C++.

@@ -1,6 +1,6 @@
 
 class HID {
-	public:
+  public:
 	static void setup();
 
 	// actions

@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 class ResistorLadderButtons {
   public:
 	ResistorLadderButtons(const uint16 adcMax, const uint16 rBase, const uint8 pin, const uint32* bins, const uint8 binCount);
@@ -5,10 +7,18 @@ class ResistorLadderButtons {
 	void loop();
 
 	// property setters
-	void setButtonDownCallback(void (*callback)(const uint8 button)) { buttonDownCallback = callback; }
-	void setButtonUpCallback(void (*callback)(const uint8 button, uint32 duration)) { buttonUpCallback = callback; }
-	void setButtonHeldCallback(void (*callback)(const uint8 button, uint32 duration)) { buttonHeldCallback = callback; }
-	void setDebugStream(Stream* stream) { debugStream = stream; }
+	void setButtonDownCallback(void (*callback)(const uint8 button)) {
+		buttonDownCallback = callback;
+	}
+	void setButtonUpCallback(void (*callback)(const uint8 button, uint32 duration)) {
+		buttonUpCallback = callback;
+	}
+	void setButtonHeldCallback(void (*callback)(const uint8 button, uint32 duration)) {
+		buttonHeldCallback = callback;
+	}
+	void setDebugStream(Stream* stream) {
+		debugStream = stream;
+	}
 
   private:
 	int8 rToBin(uint32 r);
