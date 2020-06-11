@@ -1,6 +1,7 @@
-#include "ResistorLadderButtons.hpp"
-
 #include <Arduino.h>
+
+#include "ResistorLadderButtons.hpp"
+#include "StreamPrintf.hpp"
 
 // #define ADC_TEST
 
@@ -35,27 +36,11 @@ void ResistorLadderButtons::loop() {
 	int static counter = 0;
 	counter++;
 	if (counter % 100000 == 0) {
-		if (debugStream != NULL) {
-			debugStream->print("Time of 100000 samples: ");
-			debugStream->println(millis());
-		}
+		StreamPrintf(debugStream, "Time of 100000 samples: %d\r\n", millis());
 	}
 
 	if (bin != lastBin) {
-		if (debugStream != NULL) {
-			debugStream->print(millis());
-			debugStream->print(" - ");
-			debugStream->print(v);
-			debugStream->print(" - ");
-			debugStream->print(filteredValue);
-			debugStream->print(" - ");
-			debugStream->print(r);
-			debugStream->print(" - ");
-			debugStream->print(lastBin);
-			debugStream->print(" - ");
-			debugStream->print(bin);
-			debugStream->print(" - ");
-		}
+		StreamPrintf(debugStream, "%d - %d - %d - %d - %d - %d - ", millis(), v, filteredValue, r, lastBin, bin);
 
 		if (lastBin > 0) { // if we are leaving a bin that is a button
 			if (samplesInLastBin > BIN_DEBOUNCE_SAMPLES) { // if we are leaving it and we were stable in it
@@ -93,35 +78,14 @@ void ResistorLadderButtons::loop() {
 		samplesInLastBin = 0;
 	} else { // same bin
 		if (counter % (1000000 / SAMPLE_DELAY) == 0) { // do periodical print of values even if there is no change
-			debugStream->print(millis());
-			debugStream->print(" - ");
-			debugStream->print(v);
-			debugStream->print(" - ");
-			debugStream->print(filteredValue);
-			debugStream->print(" - ");
-			debugStream->print(r);
-			debugStream->print(" - ");
-			debugStream->print(bin);
-			debugStream->println(" - Periodic");
+			StreamPrintf(debugStream, "%d - %d - %d - %d - %d - Periodic\r\n", millis(), v, filteredValue, r, bin);
 		}
 		if (samplesInLastBin == BIN_DEBOUNCE_SAMPLES && bin > 0) { // if we are exactly BIN_DEBOUNCE_SAMPLES there
 			// stable press
 			lastStablePressTime = millis();
 			nextHeldCallbackDuration = 0;
 			// log
-			if (debugStream != NULL) {
-				debugStream->print(millis());
-				debugStream->print(" - ");
-				debugStream->print(v);
-				debugStream->print(" - ");
-				debugStream->print(filteredValue);
-				debugStream->print(" - ");
-				debugStream->print(r);
-				debugStream->print(" - ");
-				debugStream->print("Stable press: ");
-				debugStream->print(bin);
-				debugStream->println();
-			}
+			StreamPrintf(debugStream, "%d - %d - %d - %d, Stable press: %d\r\n", millis(), v, filteredValue, r, bin);
 			// callback
 			if (buttonDownCallback) {
 				buttonDownCallback(bin);
