@@ -13,6 +13,7 @@ class ResistorLadderButtons {
   private:
 	int8 rToBin(uint32 r);
 	uint32 adcToResistance(uint16 rBase, uint16 adc);
+	void doAdcTest();
 
 	// fields
 	const uint16 adcMax;
@@ -26,6 +27,7 @@ class ResistorLadderButtons {
 	uint16 samplesInLastBin = 0;
 	uint32 lastStablePressTime = -1;
 	uint32 nextHeldCallbackDuration = 0; // ms
+	uint16 filteredValue = 0;
 
 	// properties
 	void (*buttonDownCallback)(const uint8 button);

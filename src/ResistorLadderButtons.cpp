@@ -2,38 +2,51 @@
 
 #include "ResistorLadderButtons.hpp"
 
+// #define ADC_TEST
+
+const uint16 SAMPLE_ACQUISITION = 10; // us, property of uC
+const uint16 SAMPLE_DELAY = 100; // us, a delay we can add to make it all less stressful and more stable
 const uint8 BIN_MARGIN_PERCENT = 20; // % of bin ohm value
-const uint8 BIN_MARGIN_MIN = 50;	 // in ohms
-const uint16 BIN_DEBOUNCE_SAMPLES = 3000; // equals about 30ms
+const uint8 BIN_MARGIN_MIN = 50; // in ohms
+const uint16 BIN_DEBOUNCE_SAMPLES = 30000 / (SAMPLE_ACQUISITION + SAMPLE_DELAY); // number of samples in about 30ms
 const uint16 HELD_CALLBACK_INTERVAL = 100; // ms
+const uint16 ADC_AVERAGING_ALPHA_PERCENT = 10; // parameter of an averaging filter. new value is 10% of previous filtered value
 
 ResistorLadderButtons::ResistorLadderButtons(const uint16 adcMax, const uint16 rBase, const uint8 pin, const uint32* bins, const uint8 binCount)
 	: adcMax(adcMax), rBase(rBase), pin(pin), bins(bins), binCount(binCount) {}
 
 void ResistorLadderButtons::setup() {
 	pinMode(pin, INPUT); // assume external pullup is used
-
-	// pinMode(pin, INPUT_PULLUP); // use internal pullup
 }
 
 // the loop function runs over and over again forever
 void ResistorLadderButtons::loop() {
+#ifdef ADC_TEST
+	doAdcTest();
+#else
+	delay_us(SAMPLE_DELAY);
 	uint16 v = analogRead(pin);
-	uint32 r = adcToResistance(rBase, v);
+	filteredValue = ((uint32)filteredValue * (100 - ADC_AVERAGING_ALPHA_PERCENT) + (uint32)v * ADC_AVERAGING_ALPHA_PERCENT) / 100;
+	uint32 r = adcToResistance(rBase, filteredValue);
 	int8 bin = rToBin(r);
 
-	// Bench result: 947ms for 100K iterations => 100 iterations per 1ms => 1 iteration is 10ns
-	/*
-	if (counter++ % 100000 == 0) {
+	// Bench result: 947ms for 100K iterations => 100 iterations per 1ms => 1 iteration is 10us (without delay)
+	int static counter = 0;
+	counter++;
+	if (counter % 100000 == 0) {
 		if (debugStream != NULL) {
+			debugStream->print("Time of 100000 samples: ");
 			debugStream->println(millis());
 		}
 	}
-	*/
 
 	if (bin != lastBin) {
 		if (debugStream != NULL) {
+			debugStream->print(millis());
+			debugStream->print(" - ");
 			debugStream->print(v);
+			debugStream->print(" - ");
+			debugStream->print(filteredValue);
 			debugStream->print(" - ");
 			debugStream->print(r);
 			debugStream->print(" - ");
@@ -77,14 +90,30 @@ void ResistorLadderButtons::loop() {
 
 		lastBin = bin;
 		samplesInLastBin = 0;
-	} else {													   // same bin
+	} else { // same bin
+		if (counter % (1000000 / SAMPLE_DELAY) == 0) { // do periodical print of values even if there is no change
+			debugStream->print(millis());
+			debugStream->print(" - ");
+			debugStream->print(v);
+			debugStream->print(" - ");
+			debugStream->print(filteredValue);
+			debugStream->print(" - ");
+			debugStream->print(r);
+			debugStream->print(" - ");
+			debugStream->print(bin);
+			debugStream->println(" - Periodic");
+		}
 		if (samplesInLastBin == BIN_DEBOUNCE_SAMPLES && bin > 0) { // if we are exactly BIN_DEBOUNCE_SAMPLES there
 			// stable press
 			lastStablePressTime = millis();
 			nextHeldCallbackDuration = 0;
 			// log
 			if (debugStream != NULL) {
+				debugStream->print(millis());
+				debugStream->print(" - ");
 				debugStream->print(v);
+				debugStream->print(" - ");
+				debugStream->print(filteredValue);
 				debugStream->print(" - ");
 				debugStream->print(r);
 				debugStream->print(" - ");
@@ -106,20 +135,6 @@ void ResistorLadderButtons::loop() {
 				duration = releaseTime - lastStablePressTime;
 				// check if need to notify
 				if (duration >= nextHeldCallbackDuration) {
-					// log
-					/*
-					debugStream->print(v);
-					debugStream->print(" - ");
-					debugStream->print(r);
-					debugStream->print(" - ");
-					debugStream->print("Hold: ");
-					debugStream->print(bin);
-					debugStream->print(", Dur: ");
-					debugStream->print(duration);
-					debugStream->print(", Next: ");
-					debugStream->print(nextHeldCallbackDuration);
-					debugStream->println();
-					*/
 					// update
 					if (buttonHeldCallback) {
 						buttonHeldCallback(bin, nextHeldCallbackDuration);
@@ -132,6 +147,7 @@ void ResistorLadderButtons::loop() {
 			samplesInLastBin++;
 		}
 	}
+#endif
 }
 
 int8 ResistorLadderButtons::rToBin(uint32 r) {
@@ -146,3 +162,18 @@ int8 ResistorLadderButtons::rToBin(uint32 r) {
 }
 
 uint32 ResistorLadderButtons::adcToResistance(uint16 rBase, uint16 adc) { return (uint32)adc * rBase / (adcMax - adc); }
+
+void ResistorLadderButtons::doAdcTest() {
+	const int N = 1000;
+	uint16 buf[N];
+	for (int i = 0; i < N; i++) {
+		delay_us(SAMPLE_DELAY);
+		buf[i] = analogRead(pin);
+	}
+	for (int i = 0; i < N; i++) {
+		if (debugStream != NULL) {
+			debugStream->println(buf[i]);
+		}
+	}
+	delay(5000);
+}
