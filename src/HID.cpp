@@ -5,11 +5,14 @@
 
 #define MAX_DIGITIZER 4095
 
-const uint8_t reportDescription[] = {HID_CONSUMER_REPORT_DESCRIPTOR(), HID_KEYBOARD_REPORT_DESCRIPTOR(),
-									 // HID_ABS_MOUSE_REPORT_DESCRIPTOR()
-									 // HID_MOUSE_REPORT_ID
-									 // HID_MOUSE_REPORT_DESCRIPTOR()
-									 HID_DIGITIZER_REPORT_DESCRIPTOR()};
+const uint8_t reportDescription[] = {
+	HID_CONSUMER_REPORT_DESCRIPTOR(), 
+	HID_KEYBOARD_REPORT_DESCRIPTOR(),
+	// HID_ABS_MOUSE_REPORT_DESCRIPTOR()
+	// HID_MOUSE_REPORT_ID
+	// HID_MOUSE_REPORT_DESCRIPTOR()
+	HID_DIGITIZER_REPORT_DESCRIPTOR()
+};
 
 USBHID HIDManager;
 USBCompositeSerial CompositeSerial;
@@ -111,17 +114,22 @@ void HID::DoPowerConfigMenu() {
 	// enable accessibility for MacroDroid, assume it is disabled, doesn't persist between retarts
 	// get home
 	DoConsHome();
-	delay(50);
+	delay(400);
 	DoConsHome();
-	delay(200);
+	delay(1000);
 	// press settings icon
 	Mouse.move(MAX_DIGITIZER * 155 / 175, MAX_DIGITIZER * 80 / 95);
 	Mouse.press();
 	delay(50);
 	Mouse.release();
 	delay(150);
+	// clear pointer
+	/*
+	Mouse.press(DIGITIZER_IN_RANGE);
 	Mouse.move(1, 1);
-	// TODO, should I be in range to move this away?
+	delay(50);
+	Mouse.release();
+	*/
 	// get to top
 	Keyboard.press(KEY_UP_ARROW);
 	delay(2000);
@@ -132,30 +140,51 @@ void HID::DoPowerConfigMenu() {
 		DoKbDownArrow();
 		delay(100);
 	}
+	delay(200);
+	// Select accessibility option
+	// do with mouse, was an issue with keyboard only
+	Mouse.move(MAX_DIGITIZER / 2, MAX_DIGITIZER * 85 / 95);
+	Mouse.press();
+	delay(100);
+	Mouse.release();
+	// hit return
 	Keyboard.press(KEY_RETURN);
 	Keyboard.release(KEY_RETURN);
-	delay(100);
+	delay(600);
 	// select MacroDroid
 	DoKbDownArrow();
 	delay(50);
+	// do with mouse, was an issue with keyboard only
+	Mouse.move(MAX_DIGITIZER / 2, MAX_DIGITIZER * 65 / 95);
+	Mouse.press();
+	delay(100);
+	Mouse.release();
+	// hit return
 	Keyboard.press(KEY_RETURN);
 	Keyboard.release(KEY_RETURN);
 	delay(50);
-	/*
 	// toggle
 	Keyboard.press(' ');
 	Keyboard.release(' ');
-	delay(50);
+	delay(200);
 	// approve change
+	/*
 	Keyboard.press(KEY_TAB);
 	Keyboard.release(KEY_TAB);
-	delay(50);
+	delay(200);
 	Keyboard.press(KEY_TAB);
 	Keyboard.release(KEY_TAB);
-	delay(50);
+	delay(200);
 	Keyboard.press(KEY_RETURN);
 	Keyboard.release(KEY_RETURN);
-	delay(50);
+	delay(100);
+	*/
+	Mouse.move(MAX_DIGITIZER * 13 / 175, MAX_DIGITIZER * 75 / 95);
+	Mouse.press();
+	delay(100);
+	Mouse.release();
+
+	/*
 	// run macrodroid action
 	// get home
 	DoConsHome();
@@ -176,9 +205,9 @@ void HID::DoPowerConfigMenu() {
 void HID::DoDvrCleanup() {
 	// get home
 	DoConsHome();
-	delay(50);
+	delay(400);
 	DoConsHome();
-	delay(50);
+	delay(1000);
 	// change to second panel
 	DoTouchSwipeLeft();
 	// press old file cleanup icon
@@ -205,9 +234,9 @@ void HID::DoDvrCleanup() {
 void HID::DoDvrToggle() {
 	// get home
 	DoConsHome();
-	delay(50);
+	delay(400);
 	DoConsHome();
-	delay(50);
+	delay(1000);
 	// press dvr icon
 	Mouse.move(MAX_DIGITIZER * 125 / 175, MAX_DIGITIZER * 80 / 95);
 	Mouse.press();
@@ -224,9 +253,9 @@ void HID::DoDvrToggle() {
 void HID::DoBtMusicToggle() {
 	// get home
 	DoConsHome();
-	delay(50);
+	delay(400);
 	DoConsHome();
-	delay(50);
+	delay(1000);
 	// press bt music icon
 	Mouse.move(MAX_DIGITIZER * 75 / 175, MAX_DIGITIZER * 80 / 95);
 	Mouse.press();
@@ -280,9 +309,9 @@ void HID::DoEmailToSelf() {
 void HID::DoRadio() {
 	// get home
 	DoConsHome();
-	delay(50);
+	delay(400);
 	DoConsHome();
-	delay(50);
+	delay(1000);
 	// press radio icon
 	Mouse.move(MAX_DIGITIZER * 105 / 175, MAX_DIGITIZER * 80 / 95);
 	Mouse.press();
@@ -293,12 +322,12 @@ void HID::DoRadio() {
 void HID::DoNavigation() {
 	// get home
 	DoConsHome();
-	delay(50);
+	delay(400);
 	DoConsHome();
-	delay(50);
+	delay(1000);
 	// change to second panel
 	DoTouchSwipeLeft();
-	// press old file cleanup icon
+	// press navigation icon
 	Mouse.move(MAX_DIGITIZER * 125 / 175, MAX_DIGITIZER * 30 / 95);
 	Mouse.press();
 	delay(50);

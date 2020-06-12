@@ -3,10 +3,10 @@
 #include "ResistorLadderButtons.hpp"
 
 #define LED_BUILTIN PB12 // redefine for black pill STM32 board
-#define USE_HID
+#define USE_HID // might interferere with debuging
 #define USE_BUZZER
-#define LAB // our "stage" environment
-// #define PERFORM_HID_ACTIONS
+// #define LAB // our "stage" environment
+#define PERFORM_HID_ACTIONS
 
 #ifdef USE_HID
 #include "HID.hpp"
