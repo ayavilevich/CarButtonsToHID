@@ -107,7 +107,13 @@ void HID::DoTouchSwipeLeft() {
 }
 
 void HID::DoTouchSwipeRight() {
-	// TODO
+	Mouse.move(MAX_DIGITIZER * 20 / 100, MAX_DIGITIZER / 2);
+	Mouse.press();
+	delay(50);
+	Mouse.move(MAX_DIGITIZER * 80 / 100, MAX_DIGITIZER / 2);
+	delay(50);
+	Mouse.release();
+	delay(1000); // let it finish the swipe animation
 }
 
 void HID::DoPowerConfigMenu() {
@@ -132,7 +138,7 @@ void HID::DoPowerConfigMenu() {
 	*/
 	// get to top
 	Keyboard.press(KEY_UP_ARROW);
-	delay(2000);
+	delay(1000);
 	Keyboard.release(KEY_UP_ARROW);
 	delay(100);
 	// 9x down
@@ -166,9 +172,10 @@ void HID::DoPowerConfigMenu() {
 	// toggle
 	Keyboard.press(' ');
 	Keyboard.release(' ');
-	delay(200);
+	delay(1000);
 	// approve change
 	/*
+	// try with keyboard
 	Keyboard.press(KEY_TAB);
 	Keyboard.release(KEY_TAB);
 	delay(200);
@@ -179,27 +186,33 @@ void HID::DoPowerConfigMenu() {
 	Keyboard.release(KEY_RETURN);
 	delay(100);
 	*/
-	Mouse.move(MAX_DIGITIZER * 13 / 175, MAX_DIGITIZER * 75 / 95);
+	// off variation
+	/*
+	Mouse.move(MAX_DIGITIZER * 125 / 175, MAX_DIGITIZER * 65 / 95);
 	Mouse.press();
-	delay(100);
+	delay(200);
+	Mouse.release();
+	*/
+	// on variation
+	Mouse.move(MAX_DIGITIZER * 125 / 175, MAX_DIGITIZER * 75 / 95);
+	Mouse.press();
+	delay(200);
 	Mouse.release();
 
-	/*
 	// run macrodroid action
 	// get home
 	DoConsHome();
-	delay(50);
+	delay(400);
+	DoConsHome();
+	delay(1000);
 	// move to second panel
-	Keyboard.press(KEY_RIGHT_ARROW);
-	Keyboard.release(KEY_RIGHT_ARROW);
-	delay(50);
+	DoTouchSwipeLeft();
 	// press green icon on macrodroid widget
 	Mouse.move(MAX_DIGITIZER * 95 / 175, MAX_DIGITIZER * 15 / 95);
 	Mouse.press();
 	delay(50);
 	Mouse.release();
 	delay(150);
-	*/
 }
 
 void HID::DoDvrCleanup() {
@@ -215,7 +228,7 @@ void HID::DoDvrCleanup() {
 	Mouse.press();
 	delay(50);
 	Mouse.release();
-	delay(1000);
+	delay(1500);
 	// press "run now"
 	Mouse.move(MAX_DIGITIZER / 2, MAX_DIGITIZER * 88 / 95);
 	Mouse.press();
@@ -294,9 +307,17 @@ void HID::DoEmailToSelf() {
 	delay(500);
 	DoKbDownArrow();
 	delay(200);
+	/*
+	// another keyboard press that doesn't work well
 	Keyboard.press(KEY_RETURN);
 	Keyboard.release(KEY_RETURN);
-	delay(200);
+	delay(500);
+	*/
+	Mouse.move(MAX_DIGITIZER * 30 / 175, MAX_DIGITIZER * 45 / 95);
+	Mouse.press();
+	delay(50);
+	Mouse.release();
+	delay(100);
 	// move to "subject"
 	Keyboard.press(KEY_TAB);
 	Keyboard.release(KEY_TAB);
