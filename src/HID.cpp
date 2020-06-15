@@ -21,7 +21,7 @@ HIDConsumer Consumer(HIDManager);
 HIDKeyboard Keyboard(HIDManager);
 // HIDAbsMouse Mouse(HIDManager);
 // HIDMouse Mouse(HIDManager);
-HIDDigitizer Mouse(HIDManager); // coordinates are 0 to 16383
+HIDDigitizer Mouse(HIDManager); // coordinates are 0 to MAX_DIGITIZER (4095)
 
 void HID::setup() {
 	HIDManager.begin(CompositeSerial, reportDescription, sizeof(reportDescription));
