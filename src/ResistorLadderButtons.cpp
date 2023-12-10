@@ -122,7 +122,7 @@ void ResistorLadderButtons::loop() {
 int8 ResistorLadderButtons::rToBin(uint32 r) {
 	for (uint8 i = 0; i < binCount; i++) {
 		uint32 margin = bins[i] * BIN_MARGIN_PERCENT / 100;
-		margin = max(margin, BIN_MARGIN_MIN);
+		margin = max(margin, (uint32)BIN_MARGIN_MIN);
 		if (r + margin >= bins[i] && r <= bins[i] + margin) {
 			return i;
 		}

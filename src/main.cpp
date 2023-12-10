@@ -2,6 +2,7 @@
 
 #include "ResistorLadderButtons.hpp"
 
+#undef LED_BUILTIN
 #define LED_BUILTIN PB12 // redefine for black pill STM32 board
 #define USE_HID // might interferere with debuging
 #define USE_BUZZER
