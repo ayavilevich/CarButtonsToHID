@@ -23,6 +23,8 @@ HIDKeyboard Keyboard(HIDManager);
 // HIDMouse Mouse(HIDManager);
 HIDDigitizer Mouse(HIDManager); // coordinates are 0 to MAX_DIGITIZER (4095)
 
+// codes: http://www.freebsddiary.org/APC/usb_hid_usages
+
 void HID::setup() {
 	HIDManager.begin(CompositeSerial, reportDescription, sizeof(reportDescription));
 	while (!USBComposite)
@@ -74,6 +76,11 @@ void HID::DoConsHome() {
 
 void HID::DoConsBack() {
 	Consumer.press(0x224);
+	Consumer.release();
+}
+
+void HID::DoConsPlayOrPause() {
+	Consumer.press(0xcd);
 	Consumer.release();
 }
 

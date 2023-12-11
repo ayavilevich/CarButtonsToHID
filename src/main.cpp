@@ -4,7 +4,7 @@
 
 #undef LED_BUILTIN
 #define LED_BUILTIN PB12 // redefine for black pill STM32 board
-#define USE_HID // might interferere with debuging
+#define USE_HID // might interferer with debugging
 #define USE_BUZZER
 // #define LAB // our "stage" environment
 #define PERFORM_HID_ACTIONS
@@ -35,12 +35,12 @@ enum {
 const uint32 BINS[] = {4300 /* no press */, 2100 /*on*/, 10 /*off*/, 1110 /*res*/, 600 /*set+*/, 300 /*set-*/, 120 /*cancel*/};
 enum {
 	BUT_NOTHING,
-	BUT_ON,
-	BUT_OFF,
-	BUT_RES,
-	BUT_SETP,
-	BUT_SETM,
-	BUT_CANCEL,
+	BUT_ON, // left, top
+	BUT_OFF, // left, bottom
+	BUT_RES, // right, top
+	BUT_SETP, // right, 2nd
+	BUT_SETM, // right 3rd
+	BUT_CANCEL, // right, bottom
 };
 #endif
 

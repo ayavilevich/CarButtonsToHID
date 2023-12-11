@@ -14,6 +14,7 @@ class HID {
 	static void DoConsBrightnessUp();
 	static void DoConsHome();
 	static void DoConsBack();
+	static void DoConsPlayOrPause();
 	static void DoConsSelectApp();
 	static void DoKbHome();
 	static void DoKbBack();
