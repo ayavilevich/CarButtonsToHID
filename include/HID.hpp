@@ -14,13 +14,22 @@ class HID {
 	static void DoConsBrightnessUp();
 	static void DoConsHome();
 	static void DoConsBack();
+	static void DoConsPlay();
+	static void DoConsPause();
 	static void DoConsPlayOrPause();
+	static void DoConsFF();
+	static void DoConsRewind();
+	static void DoConsNext();
+	static void DoConsPrevious();
 	static void DoConsSelectApp();
 	static void DoKbHome();
 	static void DoKbBack();
 	static void DoTouchSwipeLeft();
 	static void DoTouchSwipeRight();
-	// flows
+	// advanced
+	static void DoMainHomeButton(int buttonIndex);
+	static void DoBTMusicPlayButton();
+	// flows (legacy)
 	static void DoPowerConfigMenu();
 	static void DoDvrCleanup();
 	static void DoDvrToggle();

@@ -110,16 +110,21 @@ void buttonUpCallback(const uint8 button, uint32 duration) {
 			HID::DoConsBack();
 			break;
 		case BUT_RES:
-			HID::DoBtMusicToggle();
+			HID::DoConsPlayOrPause();
 			break;
 		case BUT_SETP:
-			HID::DoKbUpArrow();
+			// HID::DoKbUpArrow();
+			HID::DoConsPlay();
+			delay(500);
+			HID::DoBTMusicPlayButton();
 			break;
 		case BUT_SETM:
-			HID::DoKbDownArrow();
+			// HID::DoKbDownArrow();
+			HID::DoConsNext();
 			break;
 		case BUT_CANCEL:
-			HID::DoRadio();
+			//HID::DoRadio();
+			HID::DoConsPrevious();
 			break;
 		}
 #endif
@@ -147,22 +152,29 @@ void buttonHeldCallback(const uint8 button, uint32 duration) {
 #else
 		switch (button) {
 		case BUT_ON:
-			HID::DoPowerConfigMenu();
+			// HID::DoPowerConfigMenu();
+			HID::DoConsFF();
 			break;
 		case BUT_OFF:
-			HID::DoEmailToSelf();
+			// HID::DoEmailToSelf();
+			HID::DoConsRewind();
 			break;
 		case BUT_RES:
-			HID::DoKbAltTab();
+			// HID::DoKbAltTab();
+			HID::DoMainHomeButton(0);
 			break;
 		case BUT_SETP:
-			HID::DoDvrToggle();
+			// HID::DoDvrToggle();
+			// HID::DoConsPlay();
+			HID::DoMainHomeButton(1);
 			break;
 		case BUT_SETM:
-			HID::DoDvrCleanup();
+			// HID::DoDvrCleanup();
+			HID::DoMainHomeButton(2);
 			break;
 		case BUT_CANCEL:
-			HID::DoNavigation();
+			// HID::DoNavigation();
+			HID::DoMainHomeButton(3); // might not work due to digitizer coordinates limit
 			break;
 		}
 #endif

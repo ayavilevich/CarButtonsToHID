@@ -4,6 +4,12 @@
 #include "HID.hpp"
 
 #define MAX_DIGITIZER 4095
+// A new Android 12 unit behaves in a strange way. Screen seems to be 7200 x 2250
+// #define MAX_DIGITIZER_V2_X 7200
+// #define MAX_DIGITIZER_V2_Y 2250
+// A new Android 13 unit behaves in a strange way. Screen seems to be 7200 x 4050
+#define MAX_DIGITIZER_V2_X 7200
+#define MAX_DIGITIZER_V2_Y 4050
 
 const uint8_t reportDescription[] = {
 	HID_CONSUMER_REPORT_DESCRIPTOR(), 
@@ -79,8 +85,38 @@ void HID::DoConsBack() {
 	Consumer.release();
 }
 
+void HID::DoConsPlay() {
+	Consumer.press(0xb0);
+	Consumer.release();
+}
+
+void HID::DoConsPause() {
+	Consumer.press(0xb1);
+	Consumer.release();
+}
+
 void HID::DoConsPlayOrPause() {
 	Consumer.press(0xcd);
+	Consumer.release();
+}
+
+void HID::DoConsFF() {
+	Consumer.press(0xb3);
+	Consumer.release();
+}
+
+void HID::DoConsRewind() {
+	Consumer.press(0xb4);
+	Consumer.release();
+}
+
+void HID::DoConsNext() {
+	Consumer.press(0xb5);
+	Consumer.release();
+}
+
+void HID::DoConsPrevious() {
+	Consumer.press(0xb6);
 	Consumer.release();
 }
 
@@ -123,8 +159,31 @@ void HID::DoTouchSwipeRight() {
 	delay(1000); // let it finish the swipe animation
 }
 
+void HID::DoMainHomeButton(int buttonIndex)
+{
+	// get home
+	DoConsHome();
+	delay(400);
+	// need to do twice before one press can get to you a page N of the home app and not specifically to page 0
+	DoConsHome();
+	delay(400);
+	// press one of main icons
+	Mouse.move(MAX_DIGITIZER_V2_X * (25 + 40 * buttonIndex) / 195, MAX_DIGITIZER_V2_Y * 90 / 110); // consts are in mm
+	Mouse.press();
+	delay(50);
+	Mouse.release();
+}
+
+void HID::DoBTMusicPlayButton()
+{
+	Mouse.move(MAX_DIGITIZER_V2_X / 2, MAX_DIGITIZER_V2_Y * 98 / 110); // consts are in mm
+	Mouse.press();
+	delay(50);
+	Mouse.release();
+}
+
 void HID::DoPowerConfigMenu() {
-	// enable accessibility for MacroDroid, assume it is disabled, doesn't persist between retarts
+	// enable accessibility for MacroDroid, assume it is disabled, doesn't persist between restarts
 	// get home
 	DoConsHome();
 	delay(400);
